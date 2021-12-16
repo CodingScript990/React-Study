@@ -1,10 +1,12 @@
 import Test from './Test';
+import Wrapper from './Wrapper';
 
 function App() {
   return (
-    <div className="App">
-      <Test />
-    </div>
+    <Wrapper>
+      <Test name="react" color="red"/>
+      <Test color="blue"/>
+    </Wrapper>
   );
 }
 
