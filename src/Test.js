@@ -1,9 +1,12 @@
 import React from 'react';
 
-function Test({color, name}) {
-    return <div style={{
-        color
-    }}>Hello~! {name}</div>;
+function Test({color, name, isSpecial}) {
+    return (
+        <div style={{color}}>
+            {isSpecial ? <b>*</b> : null}
+            Hello~! {name}
+        </div>
+    );
 }
 
 Test.defaultProps = {

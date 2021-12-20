@@ -1,12 +1,9 @@
-import Test from './Test';
-import Wrapper from './Wrapper';
+import Counter from './Counter';
+import InputSample from './InputSample';
 
 function App() {
   return (
-    <Wrapper>
-      <Test name="react" color="red"/>
-      <Test color="blue"/>
-    </Wrapper>
+    <InputSample />
   );
 }
 
