@@ -1,9 +1,28 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 // Array rendering
 
 function User ({user, onRemove, onToggle}) { // 함수를 하나 더 생성해서 좀더 쉽게 작업해준다.
     const {username, email, id, active} = user;
+    /*useEffect( () => {
+        console.log('컴포넌트가 화면에 나타남');
+        // props -> state
+        // REST API
+        // D3 Video.js
+        // setInterval, setTimeout
+        return () => {
+            // clearInterval, clearTimeout
+            // 라이브러리, 인스턴스 제거
+            console.log('컴포넌트가 화면에서 사라짐');
+        };
+    }, []);
+    */
+    useEffect( () => { // 첫번째 parameter에서는 function을 등록하고
+        console.log(user); // props state
+        return () => { // 두번째 parameter에서는 
+            console.log(user); 
+        };
+    }, [user] ); 
     return(
         <div>
             <b style={{
@@ -27,6 +46,10 @@ function UserList ({users, onRemove, onToggle}) {
                 )
             }
         </div>
+        /*
+            mount : 화면에 보여진다.
+            unmount : 화면에 보이지 않는다.
+        */
     );
 };
 
