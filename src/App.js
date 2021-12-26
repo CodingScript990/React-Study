@@ -1,13 +1,18 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef, useState, useMemo} from 'react';
 import CreateUser from './CreateUser';
 import UserList from './UserList';
+
+function countActiveUsers(users) {
+  console.log('활성 사용자 수를 세는중...');
+  return users.filter( user => user.active).length;
+};
 
 function App() {
   const [inputs, setInputs] = useState({
     username : '',
     email : '',
   });
-
+  
   const {username, email} = inputs;
 
   const onChange = (e) => {
@@ -67,10 +72,15 @@ function App() {
     ))
   };
 
+  const count = useMemo( () => countActiveUsers(users), [users]);  
+  // useMemo : 특정값이 바뀌었을때만 특정한 함수가 실행되어 연산되고 그외에 값이 바뀌지 않았다면 리랜더링 하여 재사용한다
+  // 무조건 첫번째는 함수를 넣어줘야한다!
+
   return (
     <>
       <CreateUser username={username} email={email} onChange={onChange} onCreate={onCreate} />
       <UserList users={users} onRemove={onRemove} onToggle={onToggle} />
+      <div>활성 사용자 수 : {count}</div>
     </>
   );
 }

@@ -19,7 +19,7 @@ function User ({user, onRemove, onToggle}) { // 함수를 하나 더 생성해�
     */
     useEffect( () => { // 첫번째 parameter에서는 function을 등록하고
         console.log(user); // props state
-        return () => { // 두번째 parameter에서는 
+        return () => { // 두번째 parameter에서는 deps
             console.log(user); 
         };
     }, [user] ); 
