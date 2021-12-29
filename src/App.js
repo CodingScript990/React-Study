@@ -1,4 +1,4 @@
-import React, {useRef, useState, useMemo} from 'react';
+import React, {useRef, useState, useMemo, useCallback} from 'react';
 import CreateUser from './CreateUser';
 import UserList from './UserList';
 
@@ -15,13 +15,13 @@ function App() {
   
   const {username, email} = inputs;
 
-  const onChange = (e) => {
+  const onChange = useCallback(e => {
     const {name, value} = e.target;
     setInputs({
       ...inputs,
       [name] : value,
     });
-  };
+  }, [inputs]);
 
   const [users, setUsers] = useState([
     {
@@ -46,7 +46,7 @@ function App() {
 
   const nextId = useRef(4); // useRef로 컴포넌트 안의 변수 만들기
 
-  const onCreate = () => { // onCreate 함수가 실행되면(1)
+  const onCreate = useCallback(() => { // onCreate 함수가 실행되면(1) / useCallback
     const user = {
       id : nextId.current,
       username,
@@ -60,17 +60,17 @@ function App() {
     });
     
     nextId.current += 1; // 1씩 증가시켜라~!(2)
-  };
+  }, [username, email, users]); // Array
 
-  const onRemove = id => {
+  const onRemove = useCallback(id => {
     setUsers(users.filter(user => user.id !== id)); // id가 일치하지 않으면?
-  };
+  }, [users]);
 
-  const onToggle = id => {
+  const onToggle = useCallback(id => { // toggle / useCallback
     setUsers(users.map(
       user => user.id === id ? {...user, active : !user.active} : user
     ))
-  };
+  }, [users]);
 
   const count = useMemo( () => countActiveUsers(users), [users]);  
   // useMemo : 특정값이 바뀌었을때만 특정한 함수가 실행되어 연산되고 그외에 값이 바뀌지 않았다면 리랜더링 하여 재사용한다
