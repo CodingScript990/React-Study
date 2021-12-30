@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 
 // Array rendering
 
-function User ({user, onRemove, onToggle}) { // 함수를 하나 더 생성해서 좀더 쉽게 작업해준다.
+const User = React.memo(function User ({user, onRemove, onToggle}) { // 함수를 하나 더 생성해서 좀더 쉽게 작업해준다.
     const {username, email, id, active} = user;
     /*useEffect( () => {
         console.log('컴포넌트가 화면에 나타남');
@@ -32,7 +32,7 @@ function User ({user, onRemove, onToggle}) { // 함수를 하나 더 생성해�
             <button onClick={ () => onRemove(id)}>삭제</button>
         </div>
     );
-};
+});
 
 function UserList ({users, onRemove, onToggle}) {
     return ( // map함수를 사용해서 배열을 불러와준다!!
@@ -53,4 +53,6 @@ function UserList ({users, onRemove, onToggle}) {
     );
 };
 
-export default UserList;
+export default React.memo(UserList, (prevProps, nextProps) => nextProps.users === prevProps.users);
+// (prevProps, nextProps) => nextProps.users === prevProps.users 같으면 리렌더링을 하지 않겠다는 뜻이다.
+// React.memo : 최신화를 할 것들만 사용할 것을 추천!
