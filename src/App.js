@@ -1,6 +1,18 @@
-import React, {useRef, useReducer, useMemo, useCallback} from 'react';
+import React, {useRef, useReducer, useMemo, useCallback, createContext} from 'react';
+import produce from 'immer'; // immer
 import CreateUser from './CreateUser';
 import UserList from './UserList';
+import useInputs from './useInputs';
+
+// window.produce = produce;
+/*
+  [immer(불변성)]
+
+  ex) 
+  const state = {number : 1, dontChangeMe : 2};
+  const nextState = produce(state, draft => {draft.number+=1});
+  nextState => {number: 2, dontChangeMe: 2}
+*/
 
 // users count 
 
@@ -12,10 +24,13 @@ function countActiveUsers(users) {
 // Initial setting
 
 const initialState = { // initialState variable
+  /*
+  custom hook을 활용한 useInputs.js에 선언한 것을 가져오기 위함
   inputs: { // inputs object
     username : '', // username : value('')
     email : '', // email : value('')
   },
+  */
   users: [ // users Array
     { // users object
         id : 1, // key : value
@@ -42,6 +57,8 @@ const initialState = { // initialState variable
 function reducer(state, action) {
   switch(action.type) { // action type
     // type => CHANGE_INPUT
+    /*
+    [useInputs.js에 선언한 것을 가져오기 위함]
     case 'CHANGE_INPUT' : 
     return { // 반환
       ...state, // state 
@@ -50,6 +67,7 @@ function reducer(state, action) {
         [action.name] : action.value, // action name, action value 값
       }
     };
+    */
 
     // type => CREATE_USER
     case 'CREATE_USER' : 
@@ -82,6 +100,9 @@ function reducer(state, action) {
     default : throw new Error('Unhandled action'); 
   }
 };
+
+// UserDispatch
+export const UserDispatch = createContext(null); // basic value === null;
 
 function App() {
 
@@ -136,13 +157,24 @@ function App() {
   */
   
   const [state, dispatch] = useReducer(reducer, initialState); // useReducer(state, intial value)
+  
+  const [form, onChange, reset] = useInputs({ // form, onChange, reset을 useInputs안에 username, email의 값을 받아 올것이다.
+    username : '', 
+    email : '', 
+  });
+  const {username, email} = form; // 그리고 username, email의 값을 form으로 추출해준다.
 
   // 비구조할당
-  const {users} = state; // users로 state로 할당받고
   const nextId = useRef(4); // user id
-  const {username, email} = state.inputs; // username, email을 state.inputs로 추출해주고
+
+  const {users} = state; // users로 state로 할당받고
+  // const {username, email} = state.inputs; // username, email을 state.inputs로 추출해주고 
 
   // onChagne 형태
+
+  /*
+  [useInputs.js에 선언한 것을 가져오기 위함]
+
   const onChange = useCallback( e => { // event 발생
     const {name, value} = e.target; // name, value를 event target으로 받아준다.
     dispatch({ // action
@@ -151,6 +183,7 @@ function App() {
       value // value
     });
   }, [] );
+  */
 
   // onCreate 형태
 
@@ -164,10 +197,12 @@ function App() {
       }
     });
     nextId.current += 1; // user id value increate
-  }, [username, email]); // state [username, email]
+    reset(); // reset function(이전에 초기에 설정한 값에서 값을 추가하기 위한 작업)
+  }, [username, email, reset]); // state [username, email, reset]
 
   // onToggle 형태
 
+  /*
   const onToggle = useCallback( id => { // id로 받는다.
     dispatch({ // action
       type : 'TOGGLE_USER', // type
@@ -184,6 +219,7 @@ function App() {
     });
   }, []);
 
+  */
   // count 형태 
 
   const count =  useMemo( () => countActiveUsers(users), [users]); 
@@ -193,7 +229,7 @@ function App() {
   // useReducer 형태
 
   return (
-    <>
+    <UserDispatch.Provider value={dispatch}>
       {/* useState : <CreateUser username={username} email={email} onChange={onChange} onCreate={onCreate} /> */}
       {/* useState : <UserList users={users} onRemove={onRemove} onToggle={onToggle} /> */}
 
@@ -201,10 +237,10 @@ function App() {
       <CreateUser username={username} email={email} onChange={onChange} onCreate={onCreate} />
 
       {/* user */}
-      <UserList users={users} onToggle={onToggle} onRemove={onRemove} />
+      <UserList users={users} />
 
       <div>활성 사용자 수 : {count}</div>
-    </>
+    </UserDispatch.Provider>
   );
 }
 
