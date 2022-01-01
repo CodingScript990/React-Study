@@ -71,30 +71,64 @@ function reducer(state, action) {
 
     // type => CREATE_USER
     case 'CREATE_USER' : 
+      // [Immer use]  
+      return produce(state, draft => {
+        draft.users.push(action.user); // draft fucntion(대상 : users / 어떤방법으로? : push function / 진행대상은? : action.user)
+      });
+    /*
+      [Immer not use]
+
       return {
-        inputs : initialState.inputs, // initial state input
-        users : state.users.concat(action.user), // user state
+        //inputs : initialState.inputs, // initial state input
+        //users : state.users.concat(action.user), // user state
+        
       };
+      */
 
       // type => TOGGLE_USER
       case 'TOGGLE_USER' : 
+
+        // [Immer use]
+
+        return produce(state, draft => {
+          const user = draft.users.find(user => user.id === action.id); // 누굴 받아올거야? draft안에 users안에서 find할껀데? / find할 대상은?
+          // user 인데 user중에서 user.id와 action.id가 같은 아이들만 찾아올거야!
+          user.active = !user.active; // 조건이 맞으면 user.active를 실행! 아니면? !user.active해줘라!
+        });
+
+      /*
+        [Immer not use]
+
         return { // 반환
-          ...state, // state 형태
+          //...state, // state 형태
           users : state.users.map(user => 
-            user.id === action.id ? {...user, active : !user.action} : user 
+            user.id === action.id ? {...user, active : !user.active} : user 
             // user id와 action id가 같다면? => [조건문]
             // 기존 user 객체를 새로운 user 객체에 넣어주고, active 값을 기존 user.action과 같지 않게 해준다. [true]
             // 그러나 아니라면 기존 user 값을 들고온다! [false]
             ),
         };
+        */
 
       // type => REMOVE_USER
       case 'REMOVE_USER' :
+
+      // [Immer use]
+      return produce(state, draft => {
+        const idx = draft.users.findIndex(user => user.id === action.id); // 삭제할껀데, index값을 어디서 받을거야?
+        // draft.users.findIndex라는 함수안에서 user라는 곳에서 user.id와 action.id가 같은 아이만 받아올거야!
+        draft.users.splice(idx, 1);
+      });
+
+      /*
+        [Immer not use]
+
         return { // 반환
-          ...state, // user state 
+          //...state, // user state 
           users : state.users.filter(user => user.id !== action.id), 
           // users filter function을 사용해서 user값이 user.id 와 action.id값이 같지않으면 걸러내고! 같으면 삭제!
         };
+       */ 
 
     // 예외
     default : throw new Error('Unhandled action'); 
