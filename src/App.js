@@ -1,8 +1,9 @@
-import React, {useRef, useReducer, useMemo, useCallback, createContext} from 'react';
+import React, {useRef, useReducer, useMemo, useState, useCallback, createContext} from 'react';
 import produce from 'immer'; // immer
 import CreateUser from './CreateUser';
 import UserList from './UserList';
 import useInputs from './useInputs';
+import LifeCycleSample from './LifeCycleSample';
 
 // window.produce = produce;
 /*
@@ -138,6 +139,11 @@ function reducer(state, action) {
 // UserDispatch
 export const UserDispatch = createContext(null); // basic value === null;
 
+// LifCyle
+function getRandomColor() {
+  return "#" + Math.floor(Math.random() * 16777215).toString(16);
+};
+
 function App() {
 
   // useState 형태
@@ -260,6 +266,18 @@ function App() {
   // useMemo function으로 선언하고, 이전에 만들어 놓은 countActiveUsers function안에 (users의 값으로 선언 후), [users]라는 배열로 설정해준다.
   // users안에 값이 추가될때마다 [users]안에 추가가 된다.
 
+  const [color, setColor] = useState('#000000');
+  const [visible, setVisible] = useState(true);
+
+  // onClick(LifeCycle)
+  const onClick = () => {
+    setColor(getRandomColor());
+  };
+  
+  const onToggle = () => {
+    setVisible(!visible);
+  };
+
   // useReducer 형태
 
   return (
@@ -274,6 +292,11 @@ function App() {
       <UserList users={users} />
 
       <div>활성 사용자 수 : {count}</div>
+
+      {/* LifeCycle */}
+      <button onClick={onClick}>Random color</button>
+      <button onClick={onToggle}>Toggle</button>
+      {visible &&<LifeCycleSample color={color} />}
     </UserDispatch.Provider>
   );
 }
