@@ -22,3 +22,14 @@ export default App;
   8. variable 설정할때도 규칙성를 강조해주는 역할도 함!
 
 */
+
+/*
+  [eslint-disable]를 적으면 모두 비활성화 된다.
+
+  "airbnb",
+  "prettier"
+
+  [Snippet(코드 조각)]
+
+  - 자주 사용하는 것을 보다 빠르게 작업환경을 조성해주는 역할이다!
+*/
