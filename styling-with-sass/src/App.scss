@@ -4,4 +4,12 @@
     margin-top: 4rem;
     border: 1px solid #000;
     padding: 1rem;
+
+    .Button + .Button {
+        margin-top: 1rem;
+    }
+
+    .customized-button {
+        background-color: #000;
+    }
 }

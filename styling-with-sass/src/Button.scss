@@ -1,5 +1,28 @@
 $blue : #228be6; // 주석
 $white : #fff; 
+$pink : #f06595;
+$gray : #495057;
+
+// 반복 작업을 좀더 효율적으로 사용하게 만드는 아이
+@mixin buttonColor($color) {
+    background: $color;
+        &:hover {
+            background: lighten($color, 10%);
+        }
+        &:active {
+            background: darken($color, 10%);
+        }
+        &.outline {
+            color: $color;
+            background: none;
+            border: 1px solid $color;
+
+            &:hover {
+                background: $color;
+                color: $white;
+            }
+        }
+}
 
 .Button {
     display: inline-flex;
@@ -12,16 +35,76 @@ $white : #fff;
     border-radius: 4px;
     cursor: pointer;
 
-    height: 2.25rem;
     padding-left: 1rem;
     padding-right: 1rem;
-    font-size: 1rem;
-
-    background: $blue;
-    &:hover {
-        background: lighten($blue, 10%);
+    &.large {
+        height: 3rem;
+        font-size: 1.25rem;
     }
-    &:active {
-        background: darken($blue, 10%);
+
+    &.medium {
+        height: 2.25rem;
+        font-size: 1rem;
+    }
+
+    &.small {
+        height: 1.75rem;
+        font-size: .875rem;
+    }
+
+    &.blue {
+        @include buttonColor($blue); // 만든 아이를 여기에다 부르고 무엇을 추가 할 것인지 () 안에 값을 넣어주면 끝
+    }
+
+    &.gray {
+        @include buttonColor($gray);
+    }
+
+    &.pink {
+        @include buttonColor($pink);
+    }
+
+    
+    // 반복적 작업 단축키 ctrl + d 연속
+
+    & + & {
+        margin-left: 1rem;
+    }
+
+    &.fullWidth {
+        width: 100%;
+        justify-content: center;
+
+        & + & {
+            margin-left: 0;
+            margin-top: 1rem;
+        }
     }
 }
+
+// .Button + .Button {
+//     margin-left: 1rem;
+// }
+
+/*
+    [className은 겹치지 않게 하기!]
+    1. component의 naming을 고유하게 지정
+    2. 최상위 element의 className을 component name과 같게
+    3. 그 내부에서 selector를 사용
+
+    ex) Good
+    .UserProfile {
+        .user {
+            img {
+
+            }
+            .username {
+
+            }
+        }
+        .about {
+
+        }
+    }
+
+*/
