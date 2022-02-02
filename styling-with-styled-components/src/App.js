@@ -1,5 +1,7 @@
+import React, { useState } from "react";
 import styled, { ThemeProvider } from "styled-components";
 import Button from "./components/Button";
+import Dialog from "./components/Dialog";
 
 // Components style
 // const Circle = styled.div`
@@ -46,39 +48,41 @@ const size = {
 };
 
 function App() {
+  // useState
+  const [dialog, setDialog] = useState(false);
+  // event click
+  const onClick = () => {
+    setDialog(true);
+  };
+  // confirm
+  const onConfirm = () => {
+    console.log("agree");
+    setDialog(false);
+  };
+  // cancel
+  const onCancel = () => {
+    console.log("cancel");
+    setDialog(false);
+  };
   return (
     <ThemeProvider theme={{ palette, size }}>
-      <AppBlock>
-        <ButtonGroup>
-          <Button size="large">Button</Button>
-          <Button color="gray">Button</Button>
-          <Button color="pink" size="small">
-            Button
+      <>
+        <AppBlock>
+          <Button color="pink" size="large" onClick={onClick}>
+            Delete
           </Button>
-        </ButtonGroup>
-        <ButtonGroup>
-          <Button size="large" outline>
-            Button
-          </Button>
-          <Button color="gray" outline>
-            Button
-          </Button>
-          <Button color="pink" size="small" outline>
-            Button
-          </Button>
-        </ButtonGroup>
-        <ButtonGroup>
-          <Button size="large" fullWidth>
-            Button
-          </Button>
-          <Button color="gray" size="large" fullWidth>
-            Button
-          </Button>
-          <Button color="pink" size="large" fullWidth>
-            Button
-          </Button>
-        </ButtonGroup>
-      </AppBlock>
+        </AppBlock>
+        <Dialog
+          title="정말로 삭제하시겠습니까?"
+          confirmText="Delete"
+          cancelText="Cancel"
+          onConfirm={onConfirm}
+          onCancel={onCancel}
+          visible={dialog}
+        >
+          Data를 정말로 Delete 하시겠습니까?
+        </Dialog>
+      </>
     </ThemeProvider>
   );
 }

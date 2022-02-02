@@ -79,7 +79,6 @@ const StyledButton = styled.button`
   cursor: pointer;
   padding-left: 1rem;
   padding-right: 1rem;
-  margin-right: 1rem;
   align-items: center;
 
   /* Others */
