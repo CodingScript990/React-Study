@@ -1,58 +1,59 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
+import { useAsync } from "react-async";
+import User from "./User";
 
+// getUser(async)
+async function getUsers() {
+  // respone(url)
+  const respone = await axios.get(
+    "https://jsonplaceholder.typicode.com/users/"
+  );
+  // return data
+  return respone.data;
+}
+
+// Components
 function Users() {
   // Result value
-  const [users, setUsers] = useState(null);
+  // const [users, setUsers] = useState(null);
   // loading
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   // Error
-  const [error, setError] = useState(null);
+  // const [error, setError] = useState(null);
+  // start initial user id value
+  const [userId, setUserId] = useState(null);
 
-  // axios
-  const fetchUsers = async () => {
-    try {
-      setUsers(null); // initial user value === null
-      setError(null); // initial error value === null
-      setLoading(true); // user start(1)
-      const response = await axios.get(
-        "https://jsonplaceholder.typicode.com/users/"
-      );
-      // data value
-      setUsers(response.data);
-    } catch (e) {
-      // error
-      console.log("Error : ", e.response.status);
-      setError(e);
-    }
-    // loading === false
-    setLoading(false);
-  };
-
-  // Rendering
-  useEffect(() => {
-    fetchUsers(); // callback function
-  }, []);
+  // reponse async
+  const {
+    data: users,
+    error,
+    isLoading,
+    reload,
+  } = useAsync({ promiseFn: getUsers });
 
   // [false]
   // loading code
-  if (loading) return <div>loading..</div>;
+  if (isLoading) return <div>loading..</div>;
   // error code
   if (error) return <div>Sorry, An error has occurred.</div>;
   // not users value === null
-  if (!users) return null;
+  if (!users) return <button onClick={reload}>Calling</button>;
+
+  // End of Components
 
   // true
   return (
     <>
       <ul>
         {users.map((user) => (
-          <li key={user.id}>
+          <li key={user.id} onClick={() => setUserId(user.id)}>
             {user.username} ({user.name})
           </li>
         ))}
       </ul>
-      <button onClick={fetchUsers}>Bring</button>
+      <button onClick={reload}>Bring</button>
+      {userId && <User id={userId} />}
     </>
   );
 }
