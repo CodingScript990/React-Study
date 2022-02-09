@@ -1,28 +1,23 @@
-import React from "react";
-import axios from "axios";
-import { useAsync } from "react-async";
-
-// get user response function
-async function getUser({ id }) {
-  // response axios(get)
-  const response = await axios.get(
-    `https://jsonplaceholder.typicode.com/users/${id}`
-  );
-  // return data
-  return response.data;
-}
+import React, { useEffect } from "react";
+import { getUser, useUsersDispatch, useUsersState } from "./UsersContext";
 
 function User({ id }) {
   // promise[id]
-  // response id state(Obj)
-  const {
-    data: user,
-    error,
-    isLoading,
-  } = useAsync({ promiseFn: getUser, id, watch: id }); // callback
+  // state value
+  const state = useUsersState();
+  // dispatch value
+  const dispatch = useUsersDispatch();
+
+  // useEffect eventHandler
+  useEffect(() => {
+    getUser(dispatch, id);
+  }, [dispatch, id]);
+
+  // user state management
+  const { loading, data: user, error } = state.user;
 
   // state loading?
-  if (isLoading) return <div>loading...</div>;
+  if (loading) return <div>loading...</div>;
   // state error?
   if (error) return <div>error...</div>;
   // state not data
@@ -35,7 +30,7 @@ function User({ id }) {
         <b>Email : </b>
         {user.email}
       </p>
-      {/* <p>
+      <p>
         <b>City : </b>
         {user.address.city}
       </p>
@@ -46,7 +41,7 @@ function User({ id }) {
       <p>
         <b>Website : </b>
         {user.website}
-      </p> */}
+      </p>
     </div>
   );
 }
